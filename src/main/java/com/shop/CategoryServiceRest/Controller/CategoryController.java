@@ -3,6 +3,9 @@ package com.shop.CategoryServiceRest.Controller;
 import com.shop.CategoryServiceRest.Model.Category;
 import com.shop.CategoryServiceRest.Model.Item;
 import com.shop.CategoryServiceRest.Service.CategoryService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -30,6 +34,7 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
+    @ApiOperation(value = "Find parent categories")
     @GetMapping("/parents")
     public ResponseEntity<List<Category>> showParentCategories() {
         logger.info("Called showTopCategories method");
@@ -38,6 +43,7 @@ public class CategoryController {
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Find all children by parent id")
     @GetMapping("/parents/{id}")
     public ResponseEntity<List<Category>> showCategoriesByParent(@PathVariable("id") Long id) {
         logger.info("Called showCategoriesByParent method");
@@ -47,6 +53,7 @@ public class CategoryController {
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Find category by id")
     @GetMapping("/{id}")
     public ResponseEntity<Category> showCategoryById(@PathVariable("id") Long id) {
         logger.info("Called showCategoryById method");
@@ -61,8 +68,9 @@ public class CategoryController {
         }
     }
 
-    @GetMapping(params = {"name"})
-    public ResponseEntity<Category> showCategoryByName(@RequestParam("name") String name) {
+    @ApiOperation(value = "Find category by name")
+    @GetMapping("/byName/{name}")
+    public ResponseEntity<Category> showCategoryByName(@PathVariable("name") String name) {
         logger.info("Called showCategoryByName method");
         Category category = categoryService.findByName(name);
 
@@ -74,6 +82,7 @@ public class CategoryController {
         }
     }
 
+    @ApiOperation(value = "Find all parent names")
     @GetMapping("/allRootNames")
     public ResponseEntity<List<String>> showAllRootNames() {
         logger.info("Called showAllRootNames method");
@@ -82,6 +91,7 @@ public class CategoryController {
         return new ResponseEntity<>(names, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Find all children names")
     @GetMapping("/allChildNames")
     public ResponseEntity<List<String>> showAllChildNames() {
         logger.info("Called showAllChildNames method");
@@ -90,15 +100,20 @@ public class CategoryController {
         return new ResponseEntity<>(names, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Find all items of certain category")
     @GetMapping("/{id}/items")
     public ResponseEntity<List<Item>> showAllItemByCategory(@PathVariable("id") Long id) {
         logger.info("Called showAllItemsByCategory method");
         Category category = showCategoryById(id).getBody();
-        List<Item> items = new ArrayList<>(categoryService.getAllItemsByCategory(category));
+        List<Item> items = Arrays.asList(categoryService.getAllItemsByCategory(category).stream().toArray(Item[]::new));
 
         return new ResponseEntity<>(items, HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Update exists category")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Bad request (invalid category information)")
+    })
     @PutMapping("/{id}")
     public ResponseEntity<Category> updateCategory(@PathVariable("id") Long id,
                                                    @RequestBody @Valid Category category,
@@ -123,6 +138,10 @@ public class CategoryController {
         }
     }
 
+    @ApiOperation(value = "Create new category")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Bad request (invalid category information)")
+    })
     @PostMapping
     public ResponseEntity<Category> createNewCategory(@RequestBody @Valid Category category,
                                                       BindingResult bindingResult) {
@@ -137,6 +156,10 @@ public class CategoryController {
         return new ResponseEntity<>(category, HttpStatus.CREATED);
     }
 
+    @ApiOperation(value = "Delete category", notes = "Don't recommended to use")
+    @ApiResponses(value = {
+            @ApiResponse(code = 500, message = "Conflict (This category can contain items)")
+    })
     @DeleteMapping("/{id}")
     public void deleteCategory(@PathVariable("id") Long id) {
         logger.info("Called deleteCategory method");
