@@ -7,12 +7,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.shop.CategoryServiceRest.Model.Category;
-import com.shop.CategoryServiceRest.Model.Item;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 
 public class CategoryDeserializer extends StdDeserializer<Category> {
     public CategoryDeserializer() {
@@ -29,7 +25,6 @@ public class CategoryDeserializer extends StdDeserializer<Category> {
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 
         String name = node.get("name").asText();
-        Iterator<JsonNode> itemsNode = node.get("items").elements();
 
         Category category = new Category(name);
 
@@ -40,12 +35,6 @@ public class CategoryDeserializer extends StdDeserializer<Category> {
         if (node.hasNonNull("parent")) {
             category.setParent(mapper.treeToValue(node.get("parent"), Category.class));
         }
-
-        Set<Item> items = new HashSet<>();
-        while (itemsNode.hasNext()) {
-            items.add(mapper.treeToValue(itemsNode.next(), Item.class));
-        }
-        category.setItems(items);
 
         return category;
     }

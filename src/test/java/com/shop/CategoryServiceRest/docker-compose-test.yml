@@ -1,0 +1,21 @@
+version: '3'
+services:
+  db:
+    image: postgres:11.4-alpine
+    container_name: postgres-test
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: shop_db
+    restart: always
+  testCategoryService:
+    image: vladsmirn289/category_service_rest
+    container_name: testCategoryService
+    ports:
+      - 9004:8084
+    environment:
+      POSTGRES_HOST: db
+    restart: always
+    links:
+      - db

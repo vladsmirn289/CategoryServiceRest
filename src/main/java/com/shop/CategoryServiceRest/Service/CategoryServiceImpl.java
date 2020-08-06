@@ -42,7 +42,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value = "categories")
     public List<Category> findByParentIsNull() {
         logger.info("findByParentIsNull method called");
         return categoryRepo.findByParentIsNull();
@@ -66,7 +65,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value = "categories")
     public Set<String> getAllNamesOfRootCategories() {
         logger.info("getAllNamesOfCategories method called");
         return categoryRepo.findByParentIsNull().stream()
@@ -76,7 +74,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value = "categories")
     public Set<String> getAllNamesOfChildren() {
         logger.info("getAllNamesOfChildren method called");
         return categoryRepo.findByParentIsNull().parallelStream()

@@ -16,10 +16,9 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/category")
+@RequestMapping("/api/categories")
 public class CategoryController {
     private final static Logger logger = LoggerFactory.getLogger(CategoryController.class);
 
@@ -31,18 +30,19 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<Category>> showCategoriesByParent(@RequestBody Category parent) {
-        logger.info("Called showCategoriesByParent method");
-        List<Category> categories = categoryService.findByParent(parent);
+    @GetMapping("/parents")
+    public ResponseEntity<List<Category>> showParentCategories() {
+        logger.info("Called showTopCategories method");
+        List<Category> categories = categoryService.findByParentIsNull();
 
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
-    @GetMapping("/top")
-    public ResponseEntity<List<Category>> showTopCategories() {
-        logger.info("Called showTopCategories method");
-        List<Category> categories = categoryService.findByParentIsNull();
+    @GetMapping("/parents/{id}")
+    public ResponseEntity<List<Category>> showCategoriesByParent(@PathVariable("id") Long id) {
+        logger.info("Called showCategoriesByParent method");
+        Category parent = showCategoryById(id).getBody();
+        List<Category> categories = categoryService.findByParent(parent);
 
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }

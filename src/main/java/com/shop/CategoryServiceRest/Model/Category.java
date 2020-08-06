@@ -1,6 +1,7 @@
 package com.shop.CategoryServiceRest.Model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -32,6 +33,7 @@ public class Category {
     @OneToMany(fetch = FetchType.LAZY,
                cascade = { CascadeType.PERSIST, CascadeType.REMOVE },
                mappedBy = "category")
+    @JsonIgnore
     private Set<Item> items = new HashSet<>();
 
 
