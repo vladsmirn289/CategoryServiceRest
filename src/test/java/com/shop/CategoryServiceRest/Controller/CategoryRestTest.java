@@ -51,7 +51,7 @@ public class CategoryRestTest {
 
         ResponseEntity<List<Category>> responseCategories =
                 restTemplate.exchange(
-                        "http://localhost:9004/api/categories/parents",
+                        "http://localhost:9004/categories-rest-swagger/api/categories/parents",
                         HttpMethod.GET,
                         null,
                         new ParameterizedTypeReference<List<Category>>(){});
@@ -70,7 +70,7 @@ public class CategoryRestTest {
 
         ResponseEntity<List<Category>> responseCategories =
                 restTemplate.exchange(
-                        "http://localhost:9004/api/categories/parents/1",
+                        "http://localhost:9004/categories-rest-swagger/api/categories/parents/1",
                         HttpMethod.GET,
                         null,
                         new ParameterizedTypeReference<List<Category>>(){});
@@ -86,7 +86,7 @@ public class CategoryRestTest {
     public void shouldShowCategoryById() {
         ResponseEntity<Category> responseCategories =
                 restTemplate.exchange(
-                        "http://localhost:9004/api/categories/3",
+                        "http://localhost:9004/categories-rest-swagger/api/categories/3",
                         HttpMethod.GET,
                         null,
                         new ParameterizedTypeReference<Category>(){});
@@ -103,7 +103,7 @@ public class CategoryRestTest {
     public void shouldNotFoundWhenTryToFindCategoryByInvalidId() {
         ResponseEntity<Category> responseCategories =
                 restTemplate.exchange(
-                        "http://localhost:9004/api/categories/100",
+                        "http://localhost:9004/categories-rest-swagger/api/categories/100",
                         HttpMethod.GET,
                         null,
                         new ParameterizedTypeReference<Category>(){});
@@ -116,7 +116,7 @@ public class CategoryRestTest {
     public void shouldShowCategoryByName() {
         ResponseEntity<Category> responseCategories =
                 restTemplate.exchange(
-                        "http://localhost:9004/api/categories?name=Программирование",
+                        "http://localhost:9004/categories-rest-swagger/api/categories/byName/Программирование",
                         HttpMethod.GET,
                         null,
                         new ParameterizedTypeReference<Category>(){});
@@ -133,7 +133,7 @@ public class CategoryRestTest {
     public void shouldNotFoundWhenTryToFindCategoryByInvalidName() {
         ResponseEntity<Category> responseCategories =
                 restTemplate.exchange(
-                        "http://localhost:9004/api/categories?name=hello+world",
+                        "http://localhost:9004/categories-rest-swagger/api/categories/byName/hello+world",
                         HttpMethod.GET,
                         null,
                         new ParameterizedTypeReference<Category>(){});
@@ -146,7 +146,7 @@ public class CategoryRestTest {
     public void shouldShowAllRootNames() {
         ResponseEntity<List<String>> responseNames =
                 restTemplate.exchange(
-                        "http://localhost:9004/api/categories/allRootNames",
+                        "http://localhost:9004/categories-rest-swagger/api/categories/allRootNames",
                         HttpMethod.GET,
                         null,
                         new ParameterizedTypeReference<List<String>>(){});
@@ -163,7 +163,7 @@ public class CategoryRestTest {
     public void shouldShowAllChildNames() {
         ResponseEntity<List<String>> responseNames =
                 restTemplate.exchange(
-                        "http://localhost:9004/api/categories/allChildNames",
+                        "http://localhost:9004/categories-rest-swagger/api/categories/allChildNames",
                         HttpMethod.GET,
                         null,
                         new ParameterizedTypeReference<List<String>>(){});
@@ -180,7 +180,7 @@ public class CategoryRestTest {
     public void shouldShowAllItemByCategory() {
         ResponseEntity<List<Item>> responseItems =
                 restTemplate.exchange(
-                        "http://localhost:9004/api/categories/3/items",
+                        "http://localhost:9004/categories-rest-swagger/api/categories/3/items",
                         HttpMethod.GET,
                         null,
                         new ParameterizedTypeReference<List<Item>>(){});
@@ -199,7 +199,7 @@ public class CategoryRestTest {
 
         ResponseEntity<Category> responseCategories =
                 restTemplate.exchange(
-                        "http://localhost:9004/api/categories/3",
+                        "http://localhost:9004/categories-rest-swagger/api/categories/3",
                         HttpMethod.PUT,
                         new HttpEntity<>(category),
                         Category.class);
@@ -219,7 +219,7 @@ public class CategoryRestTest {
 
         ResponseEntity<Category> responseCategories =
                 restTemplate.exchange(
-                        "http://localhost:9004/api/categories/3",
+                        "http://localhost:9004/categories-rest-swagger/api/categories/3",
                         HttpMethod.PUT,
                         new HttpEntity<>(category),
                         Category.class);
@@ -240,7 +240,7 @@ public class CategoryRestTest {
 
         ResponseEntity<Category> responseCategories =
                 restTemplate.exchange(
-                        "http://localhost:9004/api/categories",
+                        "http://localhost:9004/categories-rest-swagger/api/categories",
                         HttpMethod.POST,
                         new HttpEntity<>(category),
                         Category.class);
@@ -261,7 +261,7 @@ public class CategoryRestTest {
 
         ResponseEntity<Category> responseCategories =
                 restTemplate.exchange(
-                        "http://localhost:9004/api/categories",
+                        "http://localhost:9004/categories-rest-swagger/api/categories",
                         HttpMethod.POST,
                         new HttpEntity<>(category),
                         Category.class);
@@ -278,7 +278,7 @@ public class CategoryRestTest {
     @Test
     public void shouldSuccessfulDeleteCategory() {
         restTemplate.exchange(
-                "http://localhost:9004/api/categories/3",
+                "http://localhost:9004/categories-rest-swagger/api/categories/3",
                 HttpMethod.DELETE,
                 null,
                 Object.class);
