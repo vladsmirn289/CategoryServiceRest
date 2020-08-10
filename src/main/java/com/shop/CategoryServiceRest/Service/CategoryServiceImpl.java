@@ -4,7 +4,6 @@ import com.shop.CategoryServiceRest.Model.Category;
 import com.shop.CategoryServiceRest.Model.Item;
 import com.shop.CategoryServiceRest.Repository.CategoryRepo;
 import com.shop.CategoryServiceRest.Repository.ItemRepo;
-import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +11,14 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -92,7 +92,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @Cacheable(value = "pagination", key = "#pageable")
     public Page<Item> getAllItemsByCategory(Category category, Pageable pageable) {
         logger.info("Called getAllItemsByCategory method");
 

@@ -15,7 +15,6 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -83,23 +82,6 @@ public class CacheTest {
 
         assertThat(category1).isNotNull();
         assertThat(category2).isNotNull();
-    }
-
-    @Test
-    @Transactional
-    public void getAllItemsByCategoryCacheTest() {
-        Category category1 = categoryService.findById(2L);
-        Pageable pageable = PageRequest.of(0, 5, Sort.by("name"));
-
-        categoryService.getAllItemsByCategory(category1, pageable);
-
-        Cache cache = cacheManager.getCache("pagination");
-        assertThat(cache).isNotNull();
-
-        Set<Item> items1 = cache.get(pageable, Set.class);
-
-        assertThat(items1).isNotNull();
-        assertThat(items1.size()).isEqualTo(2);
     }
 
     @Test
