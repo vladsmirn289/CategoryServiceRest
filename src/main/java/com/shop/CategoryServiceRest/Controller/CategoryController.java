@@ -105,7 +105,7 @@ public class CategoryController {
 
     @ApiOperation(value = "Find all items of certain category")
     @GetMapping(value = "/{id}/items", params = {"page", "size"})
-    public ResponseEntity<List<Item>> showAllItemByCategory(@PathVariable("id") Long id,
+    public ResponseEntity<Page<Item>> showAllItemByCategory(@PathVariable("id") Long id,
                                                             @RequestParam("page") int page,
                                                             @RequestParam("size") int size) {
         logger.info("Called showAllItemsByCategory method");
@@ -113,7 +113,7 @@ public class CategoryController {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name"));
         Page<Item> items = categoryService.getAllItemsByCategory(category, pageable);
 
-        return new ResponseEntity<>(items.getContent(), HttpStatus.OK);
+        return new ResponseEntity<>(items, HttpStatus.OK);
     }
 
     @ApiOperation(value = "Update exists category")
