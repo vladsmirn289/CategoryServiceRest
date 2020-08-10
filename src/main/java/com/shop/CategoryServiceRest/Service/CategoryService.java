@@ -2,6 +2,8 @@ package com.shop.CategoryServiceRest.Service;
 
 import com.shop.CategoryServiceRest.Model.Category;
 import com.shop.CategoryServiceRest.Model.Item;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Set;
@@ -13,7 +15,7 @@ public interface CategoryService {
     Category findByName(String name);
     Set<String> getAllNamesOfRootCategories();
     Set<String> getAllNamesOfChildren();
-    Set<Item> getAllItemsByCategory(Category category);
+    Page<Item> getAllItemsByCategory(Category category, Pageable pageable);
 
     void save(Category category);
 

@@ -8,6 +8,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,21 +89,17 @@ public class CacheTest {
     @Transactional
     public void getAllItemsByCategoryCacheTest() {
         Category category1 = categoryService.findById(2L);
-        Category category2 = categoryService.findById(3L);
+        Pageable pageable = PageRequest.of(0, 5, Sort.by("name"));
 
-        categoryService.getAllItemsByCategory(category1);
-        categoryService.getAllItemsByCategory(category2);
+        categoryService.getAllItemsByCategory(category1, pageable);
 
-        Cache cache = cacheManager.getCache("categories");
+        Cache cache = cacheManager.getCache("pagination");
         assertThat(cache).isNotNull();
 
-        Set<Item> items1 = cache.get(category1, Set.class);
-        Set<Item> items2 = cache.get(category2, Set.class);
+        Set<Item> items1 = cache.get(pageable, Set.class);
 
         assertThat(items1).isNotNull();
-        assertThat(items2).isNotNull();
         assertThat(items1.size()).isEqualTo(2);
-        assertThat(items2.size()).isEqualTo(2);
     }
 
     @Test
@@ -122,7 +121,8 @@ public class CacheTest {
         ///////////////////////////////////////////////
 
         Category toDelete2 = categoryService.findById(2L);
-        categoryService.getAllItemsByCategory(toDelete2);
+        Pageable pageable = PageRequest.of(0, 5, Sort.by("name"));
+        categoryService.getAllItemsByCategory(toDelete2, pageable);
         assertThat(cache.get(toDelete2, Set.class)).isNotNull();
 
         categoryService.delete(toDelete2);

@@ -3,6 +3,7 @@ package com.shop.CategoryServiceRest.Service;
 import com.shop.CategoryServiceRest.Model.Category;
 import com.shop.CategoryServiceRest.Model.Item;
 import com.shop.CategoryServiceRest.Repository.CategoryRepo;
+import com.shop.CategoryServiceRest.Repository.ItemRepo;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,13 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,11 +27,17 @@ public class CategoryServiceImpl implements CategoryService {
     private static final Logger logger = LoggerFactory.getLogger(CategoryServiceImpl.class);
 
     private CategoryRepo categoryRepo;
+    private ItemRepo itemRepo;
 
     @Autowired
     public void setCategoryRepo(CategoryRepo categoryRepo) {
         logger.debug("Setting categoryRepo");
         this.categoryRepo = categoryRepo;
+    }
+
+    @Autowired
+    public void setItemRepo(ItemRepo itemRepo) {
+        this.itemRepo = itemRepo;
     }
 
     @Override
@@ -84,13 +92,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @Cacheable(value = "categories", key = "#category")
-    public Set<Item> getAllItemsByCategory(Category category) {
+    @Cacheable(value = "pagination", key = "#pageable")
+    public Page<Item> getAllItemsByCategory(Category category, Pageable pageable) {
         logger.info("Called getAllItemsByCategory method");
-        Set<Item> items = category.getItems();
-        Hibernate.initialize(items);
 
-        return items;
+        return itemRepo.findAllByCategory(category, pageable);
     }
 
     @Override

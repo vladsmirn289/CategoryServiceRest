@@ -10,6 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -101,13 +105,16 @@ public class CategoryController {
     }
 
     @ApiOperation(value = "Find all items of certain category")
-    @GetMapping("/{id}/items")
-    public ResponseEntity<List<Item>> showAllItemByCategory(@PathVariable("id") Long id) {
+    @GetMapping(value = "/{id}/items", params = {"page", "size"})
+    public ResponseEntity<List<Item>> showAllItemByCategory(@PathVariable("id") Long id,
+                                                            @RequestParam("page") int page,
+                                                            @RequestParam("size") int size) {
         logger.info("Called showAllItemsByCategory method");
         Category category = showCategoryById(id).getBody();
-        List<Item> items = Arrays.asList(categoryService.getAllItemsByCategory(category).stream().toArray(Item[]::new));
+        Pageable pageable = PageRequest.of(page, size, Sort.by("name"));
+        Page<Item> items = categoryService.getAllItemsByCategory(category, pageable);
 
-        return new ResponseEntity<>(items, HttpStatus.OK);
+        return new ResponseEntity<>(items.getContent(), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Update exists category")
