@@ -7,9 +7,6 @@ import com.shop.CategoryServiceRest.Repository.ItemRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -42,7 +39,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value = "categories", key = "#parent")
     public List<Category> findByParent(Category parent) {
         logger.info("findByParent method called");
         return categoryRepo.findByParent(parent);
@@ -57,7 +53,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value = "categories")
     public Category findById(Long id) {
         logger.info("findById method called for category with id = " + id);
         return categoryRepo.findById(id).orElseThrow(NoSuchElementException::new);
@@ -65,7 +60,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value = "categories")
     public Category findByName(String name) {
         logger.info("findByName method called");
         return categoryRepo.findByName(name);
@@ -105,11 +99,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @Caching(evict = {
-            @CacheEvict(value = "categories", key = "#category"),
-            @CacheEvict(value = "categories", key = "#category.id"),
-            @CacheEvict(value = "categories", key = "#category.name")
-    })
     public void delete(Category category) {
         logger.info("Deleting category with id = " + category.getId() + " from database");
         categoryRepo.delete(category);
