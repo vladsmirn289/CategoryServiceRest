@@ -11,7 +11,6 @@ import com.shop.CategoryServiceRest.Model.Item;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class ItemDeserializer extends StdDeserializer<Item> {
     public ItemDeserializer() {
@@ -25,7 +24,6 @@ public class ItemDeserializer extends StdDeserializer<Item> {
     @Override
     public Item deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
         JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 
@@ -39,7 +37,7 @@ public class ItemDeserializer extends StdDeserializer<Item> {
         String code = node.get("code").asText();
         Category category = objectMapper.treeToValue(node.get("category"), Category.class);
         String createdOnString = node.get("createdOn").asText();
-        LocalDateTime createdOn = LocalDateTime.parse(createdOnString, formatter);
+        LocalDateTime createdOn = LocalDateTime.parse(createdOnString);
 
         Item item = new Item(name, count, weight, price, code);
         item.setDescription(description);

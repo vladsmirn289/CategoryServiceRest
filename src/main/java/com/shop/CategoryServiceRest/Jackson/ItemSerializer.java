@@ -7,7 +7,6 @@ import com.shop.CategoryServiceRest.Model.Item;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class ItemSerializer extends StdSerializer<Item> {
     public ItemSerializer() {
@@ -20,8 +19,6 @@ public class ItemSerializer extends StdSerializer<Item> {
 
     @Override
     public void serialize(Item item, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
         jsonGenerator.writeStartObject();
 
         if (item.getId() == null) {
@@ -41,9 +38,9 @@ public class ItemSerializer extends StdSerializer<Item> {
         jsonGenerator.writeObjectField("category", item.getCategory());
 
         if (item.getCreatedOn() == null) {
-            jsonGenerator.writeStringField("createdOn", LocalDateTime.now().format(formatter));
+            jsonGenerator.writeStringField("createdOn", LocalDateTime.now().toString());
         } else {
-            jsonGenerator.writeStringField("createdOn", item.getCreatedOn().format(formatter));
+            jsonGenerator.writeStringField("createdOn", item.getCreatedOn().toString());
         }
 
         jsonGenerator.writeEndObject();
