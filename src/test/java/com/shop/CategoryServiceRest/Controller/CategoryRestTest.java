@@ -1,14 +1,13 @@
 package com.shop.CategoryServiceRest.Controller;
 
+import com.shop.CategoryServiceRest.DTO.PageResponse;
 import com.shop.CategoryServiceRest.Model.Category;
 import com.shop.CategoryServiceRest.Model.Item;
 import com.shop.CategoryServiceRest.Service.CategoryService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -35,14 +34,6 @@ public class CategoryRestTest {
 
     @Autowired
     private CategoryService categoryService;
-
-    @Autowired
-    private CacheManager cacheManager;
-
-    @BeforeEach
-    public void init() {
-        cacheManager.getCache("categories").clear();
-    }
 
     @Test
     public void shouldShowParentCategories() {
@@ -178,17 +169,17 @@ public class CategoryRestTest {
 
     @Test
     public void shouldShowAllItemByCategory() {
-        ResponseEntity<List<Item>> responseItems =
+        ResponseEntity<PageResponse<Item>> responseItems =
                 restTemplate.exchange(
-                        "http://localhost:9004/categories-rest-swagger/api/categories/3/items",
+                        "http://localhost:9004/categories-rest-swagger/api/categories/3/items?page=0&size=50",
                         HttpMethod.GET,
                         null,
-                        new ParameterizedTypeReference<List<Item>>(){});
+                        new ParameterizedTypeReference<PageResponse<Item>>(){});
 
         assertThat(responseItems.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseItems.getBody()).isNotNull();
 
-        List<Item> items = responseItems.getBody();
+        List<Item> items = responseItems.getBody().toPageImpl().getContent();
         assertThat(items.size()).isEqualTo(2);
     }
 

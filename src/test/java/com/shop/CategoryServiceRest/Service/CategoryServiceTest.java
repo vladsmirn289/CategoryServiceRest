@@ -2,7 +2,6 @@ package com.shop.CategoryServiceRest.Service;
 
 import com.shop.CategoryServiceRest.Model.Category;
 import com.shop.CategoryServiceRest.Repository.CategoryRepo;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,6 @@ import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.cache.CacheManager;
 
 import java.util.*;
 
@@ -23,16 +21,8 @@ public class CategoryServiceTest {
     @Autowired
     private CategoryService categoryService;
 
-    @Autowired
-    CacheManager cacheManager;
-
     @MockBean
     private CategoryRepo categoryRepo;
-
-    @BeforeEach
-    public void clearCache() {
-        cacheManager.getCache("categories").clear();
-    }
 
     @Test
     public void shouldFindByParent() {
