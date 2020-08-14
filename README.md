@@ -3,7 +3,7 @@
 # Category service
 
 ## About
-This is the category service for goods-shop-rest project. This service allows retrieve, save or delete categories.
+This is the category service for [goods-shop-rest] project. This service allows retrieve, save or delete categories.
 
 ## If you find a bug, or you have any suggestions
 You can follow the next link and describe your problem/suggestion: https://github.com/vladsmirn289/CategoryServiceRest/issues
