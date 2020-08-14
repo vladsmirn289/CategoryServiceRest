@@ -36,7 +36,7 @@ The diagram of the package structure:
                 *   [com.shop.AuthenticationService]
                     *   [Config] (Swagger config)
                     *   [Controller] (CategoryController that manages categories, and RootController for swagger)
-                    *   [Jackson] (Serializers and deserializers rof category and items classes)
+                    *   [Jackson] (Serializers and deserializers for category and items classes)
                     *   [Model] (JPA entities)
                     *   [Repository] (Spring Data repos)
                     *   [Service] (Service for finding client by a login)
