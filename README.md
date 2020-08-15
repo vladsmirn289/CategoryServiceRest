@@ -34,6 +34,7 @@ The diagram of the package structure:
         *   [main]
             *   [java]
                 *   [com.shop.AuthenticationService]
+                    *   [Aop] (Intercepts exceptions to get rid of duplication)
                     *   [Config] (Swagger config)
                     *   [Controller] (CategoryController that manages categories, and RootController for swagger)
                     *   [Jackson] (Serializers and deserializers rof category and items classes)
@@ -67,6 +68,7 @@ Authentication service is the service released under version 2.0 of the [Apache 
 [main]: ./src/main
 [java]: ./src/main/java
 [com.shop.AuthenticationService]: ./src/main/java/com/shop/CategoryServiceRest
+[Aop]: ./src/main/java/com/shop/CategoryServiceRest/Aop
 [Config]: ./src/main/java/com/shop/CategoryServiceRest/Config
 [Controller]: ./src/main/java/com/shop/CategoryServiceRest/Controller
 [Jackson]: ./src/main/java/com/shop/CategoryServiceRest/Jackson

@@ -1,5 +1,7 @@
 package com.shop.CategoryServiceRest.Controller;
 
+import com.shop.CategoryServiceRest.Aop.BadRequestPointcut;
+import com.shop.CategoryServiceRest.Aop.NoSuchElementPointcut;
 import com.shop.CategoryServiceRest.Model.Category;
 import com.shop.CategoryServiceRest.Model.Item;
 import com.shop.CategoryServiceRest.Service.CategoryService;
@@ -22,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -57,18 +58,13 @@ public class CategoryController {
     }
 
     @ApiOperation(value = "Find category by id")
+    @NoSuchElementPointcut
     @GetMapping("/{id}")
     public ResponseEntity<Category> showCategoryById(@PathVariable("id") Long id) {
         logger.info("Called showCategoryById method");
+        Category category = categoryService.findById(id);
 
-        try{
-            Category category = categoryService.findById(id);
-            return new ResponseEntity<>(category, HttpStatus.OK);
-        } catch (NoSuchElementException ex) {
-            logger.warn("Category with id - " + id + " not found");
-            logger.error(ex.toString());
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
     @ApiOperation(value = "Find category by name")
@@ -120,45 +116,31 @@ public class CategoryController {
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Bad request (invalid category information)")
     })
+    @NoSuchElementPointcut
+    @BadRequestPointcut
     @PutMapping("/{id}")
     public ResponseEntity<Category> updateCategory(@PathVariable("id") Long id,
                                                    @RequestBody @Valid Category category,
                                                    BindingResult bindingResult) {
         logger.info("Called updateCategory method");
+        Category persistentCategory = categoryService.findById(id);
+        BeanUtils.copyProperties(category, persistentCategory, "id");
+        categoryService.save(persistentCategory);
 
-        if (bindingResult.hasErrors()) {
-            logger.info("Bad request on update category information");
-            return new ResponseEntity<>(category, HttpStatus.BAD_REQUEST);
-        }
-
-        try {
-            Category persistentCategory = categoryService.findById(id);
-
-            BeanUtils.copyProperties(category, persistentCategory, "id");
-            categoryService.save(persistentCategory);
-            return new ResponseEntity<>(persistentCategory, HttpStatus.OK);
-        } catch (NoSuchElementException ex) {
-            logger.warn("Category with id - " + id + " not found");
-            logger.error(ex.toString());
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(persistentCategory, HttpStatus.OK);
     }
 
     @ApiOperation(value = "Create new category")
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "Bad request (invalid category information)")
     })
+    @BadRequestPointcut
     @PostMapping
     public ResponseEntity<Category> createNewCategory(@RequestBody @Valid Category category,
                                                       BindingResult bindingResult) {
         logger.info("Called createNewCategory method");
-
-        if (bindingResult.hasErrors()) {
-            logger.info("Bad request on create category information");
-            return new ResponseEntity<>(category, HttpStatus.BAD_REQUEST);
-        }
-
         categoryService.save(category);
+
         return new ResponseEntity<>(category, HttpStatus.CREATED);
     }
 
@@ -166,16 +148,11 @@ public class CategoryController {
     @ApiResponses(value = {
             @ApiResponse(code = 500, message = "Conflict (This category can contain items)")
     })
+    @NoSuchElementPointcut
     @DeleteMapping("/{id}")
     public void deleteCategory(@PathVariable("id") Long id) {
         logger.info("Called deleteCategory method");
         Category category = showCategoryById(id).getBody();
-
-        try {
-            categoryService.delete(category);
-        } catch (NoSuchElementException ex) {
-            logger.warn("Category with id - " + id + " not found");
-            logger.error(ex.toString());
-        }
+        categoryService.delete(category);
     }
 }
