@@ -3,7 +3,7 @@
 # Category service
 
 ## About
-This is the category service for goods-shop-rest project. This service allows retrieve, save or delete categories.
+This is the category service for [goods-shop-rest] project. This service allows retrieve, save or delete categories.
 
 ## If you find a bug, or you have any suggestions
 You can follow the next link and describe your problem/suggestion: https://github.com/vladsmirn289/CategoryServiceRest/issues
@@ -37,10 +37,10 @@ The diagram of the package structure:
                     *   [Aop] (Intercepts exceptions to get rid of duplication)
                     *   [Config] (Swagger config)
                     *   [Controller] (CategoryController that manages categories, and RootController for swagger)
-                    *   [Jackson] (Serializers and deserializers rof category and items classes)
+                    *   [Jackson] (Serializers and deserializers for category and items classes)
                     *   [Model] (JPA entities)
                     *   [Repository] (Spring Data repos)
-                    *   [Service] (Service for finding client by a login)
+                    *   [Service] (Service logic, that delegates work to the repos)
                     *   [CategoryServiceRestApp.java] (Main class for, Spring Boot)
             *   [resources]
                 *   [application.properties] (Stores various properties of the database, JWT and swagger)
@@ -60,7 +60,7 @@ The diagram of the package structure:
                 *   [application.properties][application-test.properties] (Various properties for test environment)
 
 ## License
-Authentication service is the service released under version 2.0 of the [Apache License](https://www.apache.org/licenses/LICENSE-2.0).
+Category service is the service released under version 2.0 of the [Apache License](https://www.apache.org/licenses/LICENSE-2.0).
 
 [goods-shop-rest]: https://github.com/vladsmirn289/GoodsShopRest
 [postman]: https://www.postman.com/
